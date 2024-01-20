@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/DesignerVN-Poppins-ExtraBold.ttf",
+      "sha1": "aa7fd842aaaade6181d906e3803209cbc19d80da"
+    },
+    {
+      "path": "assets/fonts/DesignerVN-Poppins-Regular.ttf",
+      "sha1": "2a8dafa2395209037e2fc0d0bcf47efc612efebd"
+    }
+  ]
+}

@@ -8,12 +8,8 @@ const Stack = createNativeStackNavigator();
 const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Pokédex" component={PokemonList} options={{}} />
-      <Stack.Screen
-        name="PokemonDetail"
-        component={PokemonDetail}
-        options={{}}
-      />
+      <Stack.Screen name="Pokédex" component={PokemonList} />
+      <Stack.Screen name="PokemonDetail" component={PokemonDetail} />
     </Stack.Navigator>
   );
 };

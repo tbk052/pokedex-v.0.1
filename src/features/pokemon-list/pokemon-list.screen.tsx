@@ -13,12 +13,14 @@ import PokemonCard from './pokemon-card';
 import Sort from './sort';
 
 let pokemonNumber = 0;
+let isFirstTimeRender = true;
 const PokemonList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [listPokemon, setListPokemon] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [listSearchPokemon, setListSearchPokemon] = useState([]);
   const [pokemonAPIArr, setPokemonAPIArr] = useState([listPokemon]);
+  const flatListRef = React.useRef();
 
   //console.log('Re-render')
 
@@ -32,7 +34,6 @@ const PokemonList = () => {
       );
       const pokemonArray = responseData.results;
       setPokemonAPIArr(pokemonAPIArr.concat(pokemonArray));
-      console.log(pokemonAPIArr);
       const pokemonIdArr = [
         ...new Set(
           pokemonArray.map(p => p.url).map(str => str.replace(/[^0-9]/g, '')),
@@ -47,16 +48,11 @@ const PokemonList = () => {
           ['id']: pokemonIdArr[index].id,
         };
       });
+      console.log(listPokemon);
       setListPokemon([...listPokemon, ...newPokemonArr]);
       setListSearchPokemon(newPokemonArr);
+      isFirstTimeRender = false;
       pokemonNumber += 20;
-      console.log(pokemonNumber);
-
-      // if (isLoadmore) {
-      //   // setState([...mangDauTien, ...ketQuaTraVe])
-      // } else {
-      //   // setState(ketQuaTraVe)
-      // }
     } catch (e) {
       console.log(e);
     }
@@ -64,7 +60,6 @@ const PokemonList = () => {
 
   const onLoadPokemonAPI = () => {
     handleGetListPokemon();
-    console.log('message');
   };
 
   const SearchPokemon = keyword => {
@@ -79,11 +74,12 @@ const PokemonList = () => {
     }
   };
 
+  const ScrollToTop = () => {
+    flatListRef.current.scrollToOffset({animated: true, offset: 0});
+  };
+
   const renderItem = ({item}: any) => {
-    return (
-      // <PokemonDetail name={item.name} />
-      <PokemonCard name={item.name} id={item.id} />
-    );
+    return <PokemonCard name={item.name} id={item.id} />;
   };
 
   return (
@@ -134,7 +130,6 @@ const PokemonList = () => {
               setSearchQuery(text);
               SearchPokemon(text);
             }}
-            // onFocus={SearchPokemon()}
             style={{
               backgroundColor: 'white',
               marginHorizontal: 18,
@@ -170,9 +165,11 @@ const PokemonList = () => {
           setListPokemon([
             ...listPokemon.sort((a, b) => a.name.localeCompare(b.name)),
           ]);
+          ScrollToTop();
         }}
         onSortByNumber={() => {
           setListPokemon([...listPokemon.sort((a, b) => a.id - b.id)]);
+          ScrollToTop();
         }}
       />
       <View
@@ -187,6 +184,7 @@ const PokemonList = () => {
           flex: 1,
         }}>
         <FlatList
+          ref={flatListRef}
           data={listPokemon}
           renderItem={renderItem}
           keyExtractor={item => item.name}
@@ -195,7 +193,11 @@ const PokemonList = () => {
             paddingLeft: 12,
             paddingVertical: 16,
           }}
-          onEndReached={onLoadPokemonAPI}
+          onEndReached={() => {
+            if (isFirstTimeRender === false) {
+              onLoadPokemonAPI();
+            }
+          }}
           style={{flex: 1}}
         />
       </View>

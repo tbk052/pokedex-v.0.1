@@ -2,7 +2,14 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const PokemonDetail = ({route}) => {
   const id = route.params;
@@ -41,13 +48,27 @@ const PokemonDetail = ({route}) => {
     }
   };
 
+  //
+  const increaseId = () => {
+    if (idPokemon > 0 && idPokemon < 10277) {
+      setIdPokemon(idPokemon + 1);
+    }
+    if (idPokemon === 1025) {
+      setIdPokemon(10001);
+    }
+  };
+  const decreaseId = () => {
+    if (idPokemon >= 2) {
+      setIdPokemon(idPokemon - 1);
+    }
+  };
   // pokemon stats
 
   const pokeTypes = pokemonStatsDetail?.types
     ?.map((p: {type: any}) => p.type)
     ?.map((p: {name: any}) => p.name);
   console.log(pokeTypes);
-  let pokeBgColor: string;
+  let pokeBgColor = '#ffffff';
   switch (pokeTypes?.slice(0, 1)?.join('')) {
     case 'normal':
       pokeBgColor = '#AAA67F';
@@ -110,7 +131,6 @@ const PokemonDetail = ({route}) => {
       pokeBgColor = '#5A4968';
       break;
   }
-  console.log(pokeBgColor);
   const pokeMoves = pokemonStatsDetail?.moves
     ?.map((p: {move: any}) => p.move)
     ?.map((p: {name: any}) => p.name)
@@ -180,12 +200,11 @@ const PokemonDetail = ({route}) => {
           #{idPokemon}
         </Text>
       </View>
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
-          if (idPokemon >= 2) {
-            setIdPokemon(idPokemon - 1);
-          }
-        }}>
+          decreaseId();
+        }}
+        style={{zIndex: 1}}>
         <Image
           source={require('../../../res/images/chevron_left.png')}
           style={{
@@ -193,9 +212,10 @@ const PokemonDetail = ({route}) => {
             left: 30,
             width: 30,
             height: 45,
+            backgroundColor: 'blue',
           }}
         />
-      </TouchableOpacity>
+      </Pressable>
       <View
         style={{
           position: 'absolute',
@@ -215,23 +235,22 @@ const PokemonDetail = ({route}) => {
         }}>
         <Image
           src={
-            pokemonStatsDetail?.sprites?.other?.['official-artwork']
-              ?.front_default ||
-            pokemonStatsDetail?.sprites?.other?.['official-artwork']
-              ?.front_shiny
+            // pokemonStatsDetail?.sprites?.other?.['official-artwork']
+            //   ?.front_default ||
+            // pokemonStatsDetail?.sprites?.other?.['official-artwork']
+            //   ?.front_shiny
+            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${idPokemon}.png` ||
+            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shi
+            ny/${idPokemon}.png`
           }
           style={{width: 250, height: 250}}
         />
       </View>
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
-          if (idPokemon > 0 && idPokemon < 10277) {
-            setIdPokemon(idPokemon + 1);
-          }
-          if (idPokemon === 1025) {
-            setIdPokemon(10001);
-          }
-        }}>
+          increaseId();
+        }}
+        style={{zIndex: 1}}>
         <Image
           source={require('../../../res/images/chevron_right.png')}
           style={{
@@ -240,9 +259,10 @@ const PokemonDetail = ({route}) => {
             right: -350,
             width: 30,
             height: 45,
+            backgroundColor: 'blue',
           }}
         />
-      </TouchableOpacity>
+      </Pressable>
       <View
         style={{
           backgroundColor: 'white',
@@ -358,86 +378,89 @@ const PokemonDetail = ({route}) => {
                 );
               },
             )}
-            <Text style={{textAlign: 'center', marginTop: 3, fontSize: 12}}>
+            <Text style={{textAlign: 'center', marginTop: 8, fontSize: 12}}>
               Moves
             </Text>
           </View>
         </View>
-        <View style={{marginTop: 120, marginHorizontal: 20}}>
-          <Text
-            // numberOfLines={3}
-            // ellipsizeMode="tail"
-            style={{
-              textAlign: 'justify',
-              fontSize: 14,
-              fontWeight: '600',
-            }}>
-            {pokeDescrip}
-          </Text>
-        </View>
-        <Text
-          style={{
-            top: 10,
-            textAlign: 'center',
-            fontWeight: '800',
-            fontSize: 18,
-            color: pokeBgColor,
-          }}>
-          Base Stats
-        </Text>
-        {pokeBaseStats?.map(p => {
-          return (
-            <View
+        <ScrollView>
+          <View style={{marginTop: 120, marginHorizontal: 20}}>
+            <Text
+              // numberOfLines={3}
+              // ellipsizeMode="tail"
               style={{
-                flexDirection: 'row',
-                top: 10,
-                marginLeft: 20,
-                marginRight: 30,
-                height: 28,
+                textAlign: 'justify',
+                fontSize: 14,
+                fontWeight: '600',
+                zIndex: -1,
               }}>
-              <Text
-                style={{
-                  flex: 1,
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  fontWeight: '900',
-                  fontSize: 13,
-                  borderRightWidth: 0.45,
-                  color: pokeBgColor,
-                }}>
-                {p.name}
-              </Text>
-              <Text
-                style={{
-                  flex: 1,
-                  textAlign: 'center',
-                  textAlignVertical: 'center',
-                  fontWeight: '600',
-                  fontSize: 13,
-                }}>
-                {p.value}
-              </Text>
+              {pokeDescrip}{' '}
+            </Text>
+          </View>
+          <Text
+            style={{
+              top: 10,
+              textAlign: 'center',
+              fontWeight: '800',
+              fontSize: 18,
+              color: pokeBgColor,
+            }}>
+            Base Stats
+          </Text>
+          {pokeBaseStats?.map(p => {
+            return (
               <View
                 style={{
-                  flex: 5,
-                  backgroundColor: '#D3D3D3',
-                  height: 6,
-                  marginTop: 12,
-                  borderRadius: 12,
+                  flexDirection: 'row',
+                  top: 10,
+                  marginLeft: 20,
+                  marginRight: 30,
+                  height: 28,
                 }}>
+                <Text
+                  style={{
+                    flex: 1,
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    fontWeight: '900',
+                    fontSize: 13,
+                    borderRightWidth: 0.45,
+                    color: pokeBgColor,
+                  }}>
+                  {p.name}
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    fontWeight: '600',
+                    fontSize: 13,
+                  }}>
+                  {p.value}
+                </Text>
                 <View
                   style={{
-                    backgroundColor: pokeBgColor,
-                    position: 'absolute',
-                    borderRadius: 12,
+                    flex: 5,
+                    backgroundColor: '#D3D3D3',
                     height: 6,
-                    width: p.value,
-                  }}
-                />
+                    marginTop: 12,
+                    borderRadius: 12,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: pokeBgColor,
+                      position: 'absolute',
+                      borderRadius: 12,
+                      height: 6,
+                      width: p.value,
+                    }}
+                  />
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );

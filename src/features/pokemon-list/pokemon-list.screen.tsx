@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import PokemonCard from './pokemon-card';
 import Sort from './sort';
-import PokemonDetail from '../pokemon-details/pokemon-detail.screen';
 
 let pokemonNumber = 0;
 const PokemonList = () => {

@@ -28,7 +28,7 @@ const PokemonCard = ({name, id}: PokemonCardProps) => {
   // };
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      // activeOpacity={1}
       onPress={() => {
         navigation.push('PokemonDetail', Number(id));
       }}>
@@ -58,12 +58,11 @@ const PokemonCard = ({name, id}: PokemonCardProps) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {/* {!! ail?.sprites?.other['official-artwork']
-            .front_default && ( */}
           <Image
             src={
               // pokemonDetail?.sprites?.other['official-artwork'].front_default
-              `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+              `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png` ||
+              `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shi+ny/${id}.png`
             }
             style={{
               width: 120,
@@ -71,7 +70,6 @@ const PokemonCard = ({name, id}: PokemonCardProps) => {
               zIndex: 1,
             }}
           />
-          {/* )} */}
         </View>
         <Text
           style={{
@@ -91,7 +89,7 @@ const PokemonCard = ({name, id}: PokemonCardProps) => {
             width: '100%',
             backgroundColor: 'grey',
             borderRadius: 14,
-            opacity: 0.2,
+            opacity: 0.15,
             position: 'absolute',
           }}
         />

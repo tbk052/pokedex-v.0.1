@@ -4,41 +4,137 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-const pokeData = ['Mega-Punch', 'Fire-Punch'];
-const pokeMovesData = ['Mega-Punch', 'Fire-Punch'];
-const pokeStats = [
-  {stat: 'HP', value: 80},
-  {stat: 'ATK', value: 125},
-  {stat: 'DEF', value: 30},
-  {stat: 'SATK', value: 60},
-  {stat: 'SDEF', value: 45},
-  {stat: 'SPD', value: 45},
-];
-// const pokeStatsName = pokeStats.map(pokemon => pokemon.stat);
-// const pokeStatsValue = pokeStats.map(pokemon => pokemon.valuy);
-const pokeBgColor = '#F57D31';
-
 const PokemonDetail = ({route}) => {
-  const name = route.params;
+  const id = route.params;
+  let [idPokemon, setIdPokemon] = useState(id);
   const [pokemonStatsDetail, setPokemonStatsDetail] = useState({});
   useEffect(() => {
     callPokemonStatsAPI();
-  }, []);
+  }, [idPokemon]);
   const callPokemonStatsAPI = async () => {
     try {
       const {data} = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${name}`,
+        `https://pokeapi.co/api/v2/pokemon/${idPokemon}`,
       );
       setPokemonStatsDetail(data);
+      console.log('Re-render stats');
     } catch (e) {
       console.log(e);
     }
   };
 
-  const pokePropsData = pokemonStatsDetail.types
-    ?.map(p => p.type)
-    ?.map(p => p.name);
-  console.log(pokePropsData);
+  // console.log(pokemonStatsDetail.species.url);
+
+  const [pokemonSpecies, setPokemonSpecies] = useState({});
+  useEffect(() => {
+    callPokemonSpecies();
+  }, [idPokemon]);
+  const callPokemonSpecies = async () => {
+    try {
+      const {data} = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon-species/${idPokemon}`,
+      );
+      setPokemonSpecies(data);
+      console.log('Re-render color');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // pokemon stats
+
+  const pokeTypes = pokemonStatsDetail?.types
+    ?.map((p: {type: any}) => p.type)
+    ?.map((p: {name: any}) => p.name);
+  console.log(pokeTypes);
+  let pokeBgColor: string;
+  switch (pokeTypes?.slice(0, 1)?.join('')) {
+    case 'normal':
+      pokeBgColor = '#AAA67F';
+      break;
+    case 'fighting':
+      pokeBgColor = '#C03028';
+      break;
+    case 'flying':
+      pokeBgColor = '#A890F0';
+      break;
+    case 'poison':
+      pokeBgColor = '#A040A0';
+      break;
+    case 'ground':
+      pokeBgColor = '#E0C068';
+      break;
+    case 'rock':
+      pokeBgColor = '#B8A038';
+      break;
+    case 'bug':
+      pokeBgColor = '#A7B723';
+      break;
+    case 'ghost':
+      pokeBgColor = '#70559B';
+      break;
+    case 'steel':
+      pokeBgColor = '#B7B9D0';
+      break;
+    case 'fire':
+      pokeBgColor = '#F57D31';
+      break;
+    case 'water':
+      pokeBgColor = '#6493EB';
+      break;
+    case 'grass':
+      pokeBgColor = '#74CB48';
+      break;
+    case 'electric':
+      pokeBgColor = '#F9CF30';
+      break;
+    case 'psychic':
+      pokeBgColor = '#FB5584';
+      break;
+    case 'ice':
+      pokeBgColor = '#98D8D8';
+      break;
+    case 'dragon':
+      pokeBgColor = '#7038F8';
+      break;
+    case 'dark':
+      pokeBgColor = '#705848';
+      break;
+    case 'fairy':
+      pokeBgColor = '#EE99AC';
+      break;
+    case 'unknown':
+      pokeBgColor = '#68A090';
+      break;
+    case 'shadow':
+      pokeBgColor = '#5A4968';
+      break;
+  }
+  console.log(pokeBgColor);
+  const pokeMoves = pokemonStatsDetail?.moves
+    ?.map((p: {move: any}) => p.move)
+    ?.map((p: {name: any}) => p.name)
+    ?.sort(() => 0.5 - Math.random())
+    ?.slice(0, 2);
+  const pokeDescrip = [
+    ...new Set(
+      pokemonSpecies?.flavor_text_entries?.map(
+        (p: {flavor_text: any}) => p.flavor_text,
+      ),
+    ),
+  ]
+    ?.slice(0, 3)
+    ?.join(' ')
+    ?.replace(/\s+/g, ' ');
+
+  const pokeBaseStatsName = ['HP', 'ATK', 'DEF', 'SATK', 'SDEF', 'SPD'];
+  const pokeBaseStats = pokeBaseStatsName?.map((name, index) => ({
+    name,
+    value: pokemonStatsDetail?.stats?.map(
+      (p: {base_stat: any}) => p?.base_stat,
+    )[index],
+  }));
+
   //
   const navigation = useNavigation<any>();
   return (
@@ -53,7 +149,7 @@ const PokemonDetail = ({route}) => {
           onPress={() => {
             navigation.goBack();
           }}
-          style={{width: 50}}>
+          style={{width: 50, flex: 1}}>
           <Image
             source={require('../../../res/images/arrow_back.png')}
             style={{marginLeft: 12, width: 35, height: 35}}
@@ -61,6 +157,7 @@ const PokemonDetail = ({route}) => {
         </TouchableOpacity>
         <Text
           style={{
+            flex: 5,
             paddingLeft: 6,
             fontSize: 27,
             fontWeight: '800',
@@ -71,22 +168,39 @@ const PokemonDetail = ({route}) => {
         </Text>
         <Text
           style={{
-            marginLeft: 130,
-            textAlign: 'right',
+            flex: 2,
+            // marginLeft: 130,
+            textAlign: 'center',
+            // right: -150,
             paddingTop: 10,
             fontSize: 15,
             fontWeight: '800',
             color: '#FFFFFF',
           }}>
-          #{pokemonStatsDetail.order}
+          #{idPokemon}
         </Text>
       </View>
+      <TouchableOpacity
+        onPress={() => {
+          if (idPokemon >= 2) {
+            setIdPokemon(idPokemon - 1);
+          }
+        }}>
+        <Image
+          source={require('../../../res/images/chevron_left.png')}
+          style={{
+            top: 180,
+            left: 30,
+            width: 30,
+            height: 45,
+          }}
+        />
+      </TouchableOpacity>
       <View
         style={{
           position: 'absolute',
           right: 6,
           top: 6,
-          zIndex: -1,
         }}>
         <Image
           source={require('../../../res/images/pokeball_background.png')}
@@ -95,23 +209,45 @@ const PokemonDetail = ({route}) => {
       </View>
       <View
         style={{
-          top: 30,
+          top: -10,
           alignSelf: 'center',
           zIndex: 1,
         }}>
         <Image
           src={
             pokemonStatsDetail?.sprites?.other?.['official-artwork']
-              ?.front_default
+              ?.front_default ||
+            pokemonStatsDetail?.sprites?.other?.['official-artwork']
+              ?.front_shiny
           }
           style={{width: 250, height: 250}}
         />
       </View>
+      <TouchableOpacity
+        onPress={() => {
+          if (idPokemon > 0 && idPokemon < 10277) {
+            setIdPokemon(idPokemon + 1);
+          }
+          if (idPokemon === 1025) {
+            setIdPokemon(10001);
+          }
+        }}>
+        <Image
+          source={require('../../../res/images/chevron_right.png')}
+          style={{
+            zIndex: 2,
+            top: -115,
+            right: -350,
+            width: 30,
+            height: 45,
+          }}
+        />
+      </TouchableOpacity>
       <View
         style={{
           backgroundColor: 'white',
           flex: 1,
-          marginTop: -40,
+          marginTop: -120,
           borderRadius: 8,
           width: '98%',
           marginVertical: 4,
@@ -123,10 +259,21 @@ const PokemonDetail = ({route}) => {
             alignSelf: 'center',
             top: 70,
           }}>
-          {pokemonStatsDetail.types
-            ?.map(p => p.type)
-            ?.map(p => p.name)
-            ?.map(props => {
+          {pokeTypes?.map(
+            (
+              props:
+                | string
+                | number
+                | boolean
+                | React.ReactElement<
+                    any,
+                    string | React.JSXElementConstructor<any>
+                  >
+                | Iterable<React.ReactNode>
+                | React.ReactPortal
+                | null
+                | undefined,
+            ) => {
               return (
                 <Text
                   style={{
@@ -145,7 +292,8 @@ const PokemonDetail = ({route}) => {
                   {props}
                 </Text>
               );
-            })}
+            },
+          )}
         </View>
         <Text
           style={{
@@ -188,23 +336,48 @@ const PokemonDetail = ({route}) => {
             <Text style={{textAlign: 'center', fontSize: 12}}>Height</Text>
           </View>
           <View style={{flex: 1, alignItems: 'center'}}>
-            {pokeMovesData.map(move => {
-              return <Text style={{fontSize: 14}}>{move}</Text>;
-            })}
+            {pokeMoves?.map(
+              (
+                move:
+                  | string
+                  | number
+                  | boolean
+                  | React.ReactElement<
+                      any,
+                      string | React.JSXElementConstructor<any>
+                    >
+                  | Iterable<React.ReactNode>
+                  | React.ReactPortal
+                  | null
+                  | undefined,
+              ) => {
+                return (
+                  <Text style={{fontSize: 14, textTransform: 'capitalize'}}>
+                    {move}
+                  </Text>
+                );
+              },
+            )}
             <Text style={{textAlign: 'center', marginTop: 3, fontSize: 12}}>
               Moves
             </Text>
           </View>
         </View>
-        <View style={{marginTop: 140, marginHorizontal: 20}}>
-          <Text style={{textAlign: 'justify', fontSize: 14, fontWeight: '400'}}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore
+        <View style={{marginTop: 120, marginHorizontal: 20}}>
+          <Text
+            // numberOfLines={3}
+            // ellipsizeMode="tail"
+            style={{
+              textAlign: 'justify',
+              fontSize: 14,
+              fontWeight: '600',
+            }}>
+            {pokeDescrip}
           </Text>
         </View>
         <Text
           style={{
-            top: 35,
+            top: 10,
             textAlign: 'center',
             fontWeight: '800',
             fontSize: 18,
@@ -212,12 +385,12 @@ const PokemonDetail = ({route}) => {
           }}>
           Base Stats
         </Text>
-        {pokeStats.map(pokemon => {
+        {pokeBaseStats?.map(p => {
           return (
             <View
               style={{
                 flexDirection: 'row',
-                top: 50,
+                top: 10,
                 marginLeft: 20,
                 marginRight: 30,
                 height: 28,
@@ -232,7 +405,7 @@ const PokemonDetail = ({route}) => {
                   borderRightWidth: 0.45,
                   color: pokeBgColor,
                 }}>
-                {pokemon.stat}
+                {p.name}
               </Text>
               <Text
                 style={{
@@ -242,7 +415,7 @@ const PokemonDetail = ({route}) => {
                   fontWeight: '600',
                   fontSize: 13,
                 }}>
-                {pokemon.value}
+                {p.value}
               </Text>
               <View
                 style={{
@@ -258,7 +431,7 @@ const PokemonDetail = ({route}) => {
                     position: 'absolute',
                     borderRadius: 12,
                     height: 6,
-                    width: pokemon.value,
+                    width: p.value,
                   }}
                 />
               </View>

@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 interface PokemonCardProps {
@@ -9,7 +8,6 @@ interface PokemonCardProps {
   name: string;
 }
 const PokemonCard = ({name, id}: PokemonCardProps) => {
-  // const route = useRoute();
   const navigation = useNavigation<any>();
   // const [pokemonDetail, setPokemonDetail] = useState({});
   // useEffect(() => {
@@ -32,7 +30,7 @@ const PokemonCard = ({name, id}: PokemonCardProps) => {
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
-        navigation.push('PokemonDetail', name);
+        navigation.push('PokemonDetail', Number(id));
       }}>
       <View
         style={{

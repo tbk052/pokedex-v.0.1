@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import PokeSprite from './pokemon-sprites';
 
 const PokemonDetail = ({route}) => {
   const id = route.params;
@@ -67,7 +68,6 @@ const PokemonDetail = ({route}) => {
   const pokeTypes = pokemonStatsDetail?.types
     ?.map((p: {type: any}) => p.type)
     ?.map((p: {name: any}) => p.name);
-  console.log(pokeTypes);
   let pokeBgColor = '#ffffff';
   switch (pokeTypes?.slice(0, 1)?.join('')) {
     case 'normal':
@@ -143,7 +143,7 @@ const PokemonDetail = ({route}) => {
       ),
     ),
   ]
-    ?.slice(0, 3)
+    ?.slice(0, 2)
     ?.join(' ')
     ?.replace(/\s+/g, ' ');
 
@@ -212,7 +212,6 @@ const PokemonDetail = ({route}) => {
             left: 30,
             width: 30,
             height: 45,
-            backgroundColor: 'blue',
           }}
         />
       </Pressable>
@@ -259,7 +258,6 @@ const PokemonDetail = ({route}) => {
             right: -350,
             width: 30,
             height: 45,
-            backgroundColor: 'blue',
           }}
         />
       </Pressable>
@@ -383,8 +381,12 @@ const PokemonDetail = ({route}) => {
             </Text>
           </View>
         </View>
-        <ScrollView>
-          <View style={{marginTop: 120, marginHorizontal: 20}}>
+        <ScrollView
+          style={{
+            marginTop: 120,
+            marginHorizontal: 20,
+          }}>
+          <View>
             <Text
               // numberOfLines={3}
               // ellipsizeMode="tail"
@@ -394,7 +396,7 @@ const PokemonDetail = ({route}) => {
                 fontWeight: '600',
                 zIndex: -1,
               }}>
-              {pokeDescrip}{' '}
+              {pokeDescrip}
             </Text>
           </View>
           <Text
@@ -407,59 +409,62 @@ const PokemonDetail = ({route}) => {
             }}>
             Base Stats
           </Text>
-          {pokeBaseStats?.map(p => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  top: 10,
-                  marginLeft: 20,
-                  marginRight: 30,
-                  height: 28,
-                }}>
-                <Text
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    fontWeight: '900',
-                    fontSize: 13,
-                    borderRightWidth: 0.45,
-                    color: pokeBgColor,
-                  }}>
-                  {p.name}
-                </Text>
-                <Text
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    fontWeight: '600',
-                    fontSize: 13,
-                  }}>
-                  {p.value}
-                </Text>
+          <View style={{marginBottom: 20}}>
+            {pokeBaseStats?.map(p => {
+              return (
                 <View
                   style={{
-                    flex: 5,
-                    backgroundColor: '#D3D3D3',
-                    height: 6,
-                    marginTop: 12,
-                    borderRadius: 12,
+                    flexDirection: 'row',
+                    top: 10,
+                    marginLeft: 20,
+                    marginRight: 30,
+                    height: 28,
                   }}>
+                  <Text
+                    style={{
+                      flex: 1,
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                      fontWeight: '900',
+                      fontSize: 13,
+                      borderRightWidth: 0.45,
+                      color: pokeBgColor,
+                    }}>
+                    {p.name}
+                  </Text>
+                  <Text
+                    style={{
+                      flex: 1,
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                      fontWeight: '600',
+                      fontSize: 13,
+                    }}>
+                    {p.value}
+                  </Text>
                   <View
                     style={{
-                      backgroundColor: pokeBgColor,
-                      position: 'absolute',
-                      borderRadius: 12,
+                      flex: 5,
+                      backgroundColor: '#D3D3D3',
                       height: 6,
-                      width: p.value,
-                    }}
-                  />
+                      marginTop: 12,
+                      borderRadius: 12,
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: pokeBgColor,
+                        position: 'absolute',
+                        borderRadius: 12,
+                        height: 6,
+                        width: p.value,
+                      }}
+                    />
+                  </View>
                 </View>
-              </View>
-            );
-          })}
+              );
+            })}
+          </View>
+          <PokeSprite pokeBgColor={pokeBgColor} idPokemon={idPokemon} />
         </ScrollView>
       </View>
     </View>

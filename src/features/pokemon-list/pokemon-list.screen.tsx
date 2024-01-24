@@ -48,7 +48,6 @@ const PokemonList = () => {
           ['id']: pokemonIdArr[index].id,
         };
       });
-      console.log(listPokemon);
       setListPokemon([...listPokemon, ...newPokemonArr]);
       setListSearchPokemon(newPokemonArr);
       isFirstTimeRender = false;

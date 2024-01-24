@@ -68,6 +68,8 @@ const PokemonDetail = ({route}) => {
   const pokeTypes = pokemonStatsDetail?.types
     ?.map((p: {type: any}) => p.type)
     ?.map((p: {name: any}) => p.name);
+
+  //
   let pokeBgColor = '#ffffff';
   switch (pokeTypes?.slice(0, 1)?.join('')) {
     case 'normal':
@@ -277,41 +279,26 @@ const PokemonDetail = ({route}) => {
             alignSelf: 'center',
             top: 70,
           }}>
-          {pokeTypes?.map(
-            (
-              props:
-                | string
-                | number
-                | boolean
-                | React.ReactElement<
-                    any,
-                    string | React.JSXElementConstructor<any>
-                  >
-                | Iterable<React.ReactNode>
-                | React.ReactPortal
-                | null
-                | undefined,
-            ) => {
-              return (
-                <Text
-                  style={{
-                    height: 26,
-                    paddingLeft: 10,
-                    paddingRight: 8,
-                    marginHorizontal: 8,
-                    borderRadius: 16,
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    fontWeight: '800',
-                    textTransform: 'capitalize',
-                    color: '#FFFFFF',
-                    backgroundColor: pokeBgColor,
-                  }}>
-                  {props}
-                </Text>
-              );
-            },
-          )}
+          {pokeTypes?.map(props => {
+            return (
+              <Text
+                style={{
+                  height: 26,
+                  paddingLeft: 10,
+                  paddingRight: 8,
+                  marginHorizontal: 8,
+                  borderRadius: 16,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  fontWeight: '800',
+                  textTransform: 'capitalize',
+                  color: '#FFFFFF',
+                  backgroundColor: pokeBgColor,
+                }}>
+                {props}
+              </Text>
+            );
+          })}
         </View>
         <Text
           style={{

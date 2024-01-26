@@ -14,8 +14,9 @@ import PokeSprite from './pokemon-sprites';
 
 const PokemonDetail = ({route}) => {
   const id = route.params;
-  let [idPokemon, setIdPokemon] = useState(id);
+  const [idPokemon, setIdPokemon] = useState(id);
   const [pokemonStatsDetail, setPokemonStatsDetail] = useState({});
+
   useEffect(() => {
     callPokemonStatsAPI();
   }, [idPokemon]);
@@ -202,21 +203,22 @@ const PokemonDetail = ({route}) => {
           #{idPokemon}
         </Text>
       </View>
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           decreaseId();
         }}
-        style={{zIndex: 1}}>
+        style={{
+          zIndex: 1,
+          top: 180,
+          left: 30,
+          width: 30,
+          height: 45,
+        }}>
         <Image
           source={require('../../../res/images/chevron_left.png')}
-          style={{
-            top: 180,
-            left: 30,
-            width: 30,
-            height: 45,
-          }}
+          style={{width: 20, height: 40, alignSelf: 'center'}}
         />
-      </Pressable>
+      </TouchableOpacity>
       <View
         style={{
           position: 'absolute',
@@ -247,22 +249,22 @@ const PokemonDetail = ({route}) => {
           style={{width: 250, height: 250}}
         />
       </View>
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           increaseId();
         }}
-        style={{zIndex: 1}}>
+        style={{
+          zIndex: 1,
+          top: -115,
+          right: -350,
+          width: 30,
+          height: 45,
+        }}>
         <Image
           source={require('../../../res/images/chevron_right.png')}
-          style={{
-            zIndex: 2,
-            top: -115,
-            right: -350,
-            width: 30,
-            height: 45,
-          }}
+          style={{width: 20, height: 40, alignSelf: 'center'}}
         />
-      </Pressable>
+      </TouchableOpacity>
       <View
         style={{
           backgroundColor: 'white',

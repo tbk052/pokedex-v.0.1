@@ -27,6 +27,8 @@ const PokemonList = () => {
   useEffect(() => {
     handleGetListPokemon();
   }, []);
+
+  // tra ve api va gan vao pokemonArray
   const handleGetListPokemon = async () => {
     try {
       const {data: responseData} = await axios.get(
@@ -34,18 +36,21 @@ const PokemonList = () => {
       );
       const pokemonArray = responseData.results;
       setPokemonAPIArr(pokemonAPIArr.concat(pokemonArray));
+      // tao mang moi chua id
       const pokemonIdArr = [
         ...new Set(
           pokemonArray.map(p => p.url).map(str => str.replace(/[^0-9]/g, '')),
         ),
       ].map(str => {
-        return {['id']: str.slice(1)};
+        return {id: str.slice(1)};
       });
+
+      //taoj mang moi gop chung id va pokemonArray
       const newPokemonArr = pokemonArray.map((obj, index) => {
         return {
-          ['name']: obj.name,
-          ['url']: obj.url,
-          ['id']: pokemonIdArr[index].id,
+          name: obj.name,
+          url: obj.url,
+          id: pokemonIdArr[index].id,
         };
       });
       setListPokemon([...listPokemon, ...newPokemonArr]);
@@ -125,6 +130,12 @@ const PokemonList = () => {
             editable={true}
             placeholder="Search"
             value={searchQuery}
+            onFocus={() => {
+              isFirstTimeRender = true;
+            }}
+            onBlur={() => {
+              isFirstTimeRender = false;
+            }}
             onChangeText={text => {
               setSearchQuery(text);
               SearchPokemon(text);

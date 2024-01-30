@@ -53,8 +53,8 @@ const PokemonList = () => {
           id: pokemonIdArr[index].id,
         };
       });
-      setListPokemon([...listPokemon, ...newPokemonArr]);
-      setListSearchPokemon(newPokemonArr);
+      setListPokemon([...listPokemon.concat(newPokemonArr)]);
+      setListSearchPokemon([...listPokemon.concat(newPokemonArr)]);
       isFirstTimeRender = false;
       pokemonNumber += 20;
     } catch (e) {
@@ -137,6 +137,7 @@ const PokemonList = () => {
               isFirstTimeRender = false;
             }}
             onChangeText={text => {
+              ScrollToTop();
               setSearchQuery(text);
               SearchPokemon(text);
             }}
@@ -171,15 +172,15 @@ const PokemonList = () => {
       <Sort
         isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
+        listPokemon={listPokemon}
+        ScrollToTop={() => ScrollToTop()}
         onSortByName={() => {
           setListPokemon([
             ...listPokemon.sort((a, b) => a.name.localeCompare(b.name)),
           ]);
-          ScrollToTop();
         }}
         onSortByNumber={() => {
           setListPokemon([...listPokemon.sort((a, b) => a.id - b.id)]);
-          ScrollToTop();
         }}
       />
       <View

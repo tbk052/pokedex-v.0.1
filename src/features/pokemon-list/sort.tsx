@@ -1,10 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 
-const Sort = ({isVisible, onClose, onSortByName, onSortByNumber}: any) => {
+const Sort = ({
+  isVisible,
+  onClose,
+  listPokemon,
+  onSortByName,
+  onSortByNumber,
+  ScrollToTop,
+}: any) => {
   //
   const [checkNumberState, setCheckNumberState] = useState(
     require('../../../res/images/checked_circle.png'),
@@ -13,6 +20,15 @@ const Sort = ({isVisible, onClose, onSortByName, onSortByNumber}: any) => {
     require('../../../res/images/unchecked_circle.png'),
   );
   //
+  useEffect(() => {
+    if (
+      checkNumberState === require('../../../res/images/checked_circle.png')
+    ) {
+      onSortByNumber();
+    } else {
+      onSortByName();
+    }
+  }, [listPokemon.length]);
   return (
     <Modal
       animationIn="fadeIn"
@@ -77,6 +93,8 @@ const Sort = ({isVisible, onClose, onSortByName, onSortByNumber}: any) => {
                   require('../../../res/images/unchecked_circle.png'),
                 );
                 onSortByNumber();
+                onClose();
+                ScrollToTop();
               }
             }}>
             <View style={{flexDirection: 'row', paddingVertical: 12}}>
@@ -100,6 +118,8 @@ const Sort = ({isVisible, onClose, onSortByName, onSortByNumber}: any) => {
                   require('../../../res/images/unchecked_circle.png'),
                 );
                 onSortByName();
+                onClose();
+                ScrollToTop();
               }
             }}>
             <View style={{flexDirection: 'row'}}>

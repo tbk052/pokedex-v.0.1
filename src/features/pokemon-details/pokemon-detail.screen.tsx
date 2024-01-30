@@ -2,15 +2,9 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import PokeSprite from './pokemon-sprites';
+// var _ = require('lodash');
 
 const PokemonDetail = ({route}) => {
   const id = route.params;
@@ -26,13 +20,11 @@ const PokemonDetail = ({route}) => {
         `https://pokeapi.co/api/v2/pokemon/${idPokemon}`,
       );
       setPokemonStatsDetail(data);
-      console.log('Re-render stats');
+      // console.log('Re-render stats');
     } catch (e) {
       console.log(e);
     }
   };
-
-  // console.log(pokemonStatsDetail.species.url);
 
   const [pokemonSpecies, setPokemonSpecies] = useState({});
   useEffect(() => {
@@ -44,7 +36,7 @@ const PokemonDetail = ({route}) => {
         `https://pokeapi.co/api/v2/pokemon-species/${idPokemon}`,
       );
       setPokemonSpecies(data);
-      console.log('Re-render color');
+      // console.log('Re-render color');
     } catch (e) {
       console.log(e);
     }
@@ -139,6 +131,23 @@ const PokemonDetail = ({route}) => {
     ?.map((p: {name: any}) => p.name)
     ?.sort(() => 0.5 - Math.random())
     ?.slice(0, 2);
+  // const pokeRenderMoves = _.chunk(
+  //   pokemonStatsDetail?.moves
+  //     ?.map((p: {move: any}) => p.move)
+  //     ?.map((p: {name: any}) => p.name),
+  //   2,
+  // );
+  // let index = 0;
+  // const RenderMoves = () => {
+  //   console.log(index);
+  //   console.log(pokeRenderMoves[index]);
+  //   index += 1;
+  //   console.log(index);
+  // };
+
+  // setInterval(() => {
+  //   RenderMoves();
+  // }, 5000);
   const pokeDescrip = [
     ...new Set(
       pokemonSpecies?.flavor_text_entries?.map(
@@ -192,9 +201,7 @@ const PokemonDetail = ({route}) => {
         <Text
           style={{
             flex: 2,
-            // marginLeft: 130,
             textAlign: 'center',
-            // right: -150,
             paddingTop: 10,
             fontSize: 15,
             fontWeight: '800',
